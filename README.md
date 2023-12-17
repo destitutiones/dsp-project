@@ -6,7 +6,15 @@ MIPT DSP course project, autumn 2023
 
 ## Пререквизиты
 
+### Poetry
+
 [Установка poetry](https://python-poetry.org/docs/#installation)
+
+### Утилита wget
+
+- [Установка brew](https://brew.sh/)
+- `eval "$(/opt/homebrew/bin/brew shellenv)"`
+- `brew install wget`
 
 ## Запуск
 
@@ -16,7 +24,7 @@ source dsp_env/bin/activate
 poetry install
 pre-commit install
 pre-commit run -a
-python3 dsp_project/hw1_deconv.py
+python3 dsp_project/hw1_impulse_response.py
 python3 dsp_project/hw2_mixer.py
 python3 dsp_project/hw3_df2.py
 ```
