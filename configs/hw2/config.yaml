@@ -1,0 +1,15 @@
+gdrive_params:
+  if_download_files: True
+  gdrive_sound_zip_path: https://drive.google.com/file/d/11pd65nLKtoJVr5pXSrPsad54GQ-6X9oY/view?usp=sharing
+
+sound_files:
+  data_dir_path: sound_files/hw2_input/
+  zip_file_name: sounds.zip
+  noise_file_name: noise.wav
+  speech_file_name: test_file.wav
+
+sound_proc_params:
+  snr_db: [-5, 0, 5, 10]
+  sampling_rate: 48000
+  pesq_sampling_rate: 16000
+  pesq_mode: "nb"

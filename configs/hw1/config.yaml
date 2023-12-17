@@ -1,5 +1,5 @@
 gdrive_params:
-  if_download_files: False
+  if_download_files: True
   gdrive_sound_zip_path: https://drive.google.com/file/d/14iS9NKjWdOiyW-Mhi01kRrB5byp3TMt6/view?usp=sharing
 
 sound_files:

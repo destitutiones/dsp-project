@@ -3,9 +3,17 @@ import os
 import subprocess
 from typing import Dict, List, Optional
 
+import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+import torch
+
+from torchmetrics.audio import (  # isort: skip
+    PerceptualEvaluationSpeechQuality,
+    ScaleInvariantSignalDistortionRatio,
+    SignalDistortionRatio,
+)
 
 
 def download_file_from_gdrive(gdrive_file_id: str, outfile: str) -> None:
@@ -123,3 +131,99 @@ def plot_input_tracks(
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.show()
+
+
+def prepare_noise(noise: List[float], original: List[float]) -> List[float]:
+    """
+    - Обрезаем шум, если он короче оригинала, в противном случае стекаем его, пока
+    длина аудиодорожки не станет равна длине оригинала.
+    - Выравниваем громкость шума по оригиналу.
+    :param noise: запись шума
+    :param original: запись оригинальной аудиодорожки
+    :return:
+    """
+    noise_len = len(noise)
+    original_len = len(original)
+
+    if original_len < noise_len:
+        noise = noise[
+            np.tile(np.arange(noise_len), int(np.ceil(original_len / noise_len)))
+        ]
+
+    noise = noise[:original_len]
+
+    P_original = np.mean(original**2)
+    P_noise = np.mean(noise**2)
+
+    # Выровняем громкость шума
+    noise *= np.sqrt(P_original / P_noise)
+
+    return noise
+
+
+def calculate_snr(snr_db: float) -> float:
+    """
+    Считаем SNR (signal-to-noise ratio) по значению SNR в децибелах.
+
+    Пользуемся следующими уравнениями:
+    - snr_db = 10*log_10(snr)
+    - A_s / A_n = sqrt(snr)
+
+    :param snr_db: значение signal-to-noise ratio в децибелах
+    :return: значение snr = A_signal / A_noise
+    """
+
+    snr = 10 ** (snr_db / 20)
+    return snr
+
+
+def calculate_metrics(
+    original: List[float],
+    mix: List[float],
+    sampling_rate,
+    pesq_sampling_rate,
+    pesq_mode,
+) -> Dict:
+    """
+    Считаем перечисленные в задании метрики.
+    :param original: запись чистого голоса
+    :param mix: смесь чистого голоса и шума
+    :param sampling_rate: sr исходной аудиозаписи
+    :param pesq_sampling_rate: параметр fs для расчета Perceptual Evaluation Speech Quality
+    :param pesq_mode: параметр mode для расчета Perceptual Evaluation Speech Quality
+    :return: pd.DataFrame с метриками
+    """
+
+    # Остальные метрики считаем в юпитер-ноутбуке, т.к. установка в poetry оказалась затруднительной
+    METRICS_TO_CALC = {
+        "PESQ": [PerceptualEvaluationSpeechQuality, (pesq_sampling_rate, pesq_mode)],
+        "SI-SDR": [ScaleInvariantSignalDistortionRatio, ()],
+        "SDR": [SignalDistortionRatio, ()],
+    }
+
+    def make_torch(x):
+        return torch.from_numpy(x)
+
+    torch_original = make_torch(original)
+    torch_mix = make_torch(mix)
+
+    torch_original_resampled = make_torch(
+        librosa.resample(original, orig_sr=sampling_rate, target_sr=pesq_sampling_rate)
+    )
+    torch_mix_resampled = make_torch(
+        librosa.resample(mix, orig_sr=sampling_rate, target_sr=pesq_sampling_rate)
+    )
+
+    metrics = {}
+
+    for name, (module, params) in METRICS_TO_CALC.items():
+        module_obj = module(*params)
+        if name == "PESQ":
+            metrics_val = float(
+                module_obj(torch_original_resampled, torch_mix_resampled)
+            )
+        else:
+            metrics_val = float(module_obj(torch_original, torch_mix))
+        metrics[name] = metrics_val
+
+    return metrics

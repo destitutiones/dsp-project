@@ -17,4 +17,5 @@ poetry install
 pre-commit install
 pre-commit run -a
 python3 dsp_project/hw1_deconv.py
+python3 dsp_project/hw2_mixer.py
 ```
