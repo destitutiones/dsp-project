@@ -1,0 +1,22 @@
+gdrive_params:
+  if_download_files: False
+  gdrive_sound_zip_path: https://drive.google.com/file/d/14iS9NKjWdOiyW-Mhi01kRrB5byp3TMt6/view?usp=sharing
+
+sound_files:
+  data_dir_path: sound_files/hw1_input/
+  zip_file_name: sounds.zip
+  sweeper_original_file_name: sweep_original.wav
+  sweeper_record_file_name: sweep_record_cut.wav
+  noise_white_file_name: noise_white.wav
+  noise_white_record_file_name: noise_white_record_cut.wav
+  noise_white_adjusted_file_name: noise_white_adjusted.wav
+  noise_pink_file_name: noise_pink.wav
+  test_file_name: test_file.wav
+  test_file_record_name: test_file_record_cut.wav
+  test_file_record_conv_name: test_file_record_conv.wav
+
+sound_proc_params:
+  band_cnt: 32
+  max_sweeper_freq: 20000
+  min_sweeper_freq: 20
+  sampling_rate: 48000
