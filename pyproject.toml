@@ -18,6 +18,8 @@ torch = "^2.1.2"
 torchmetrics = "^1.2.1"
 pesq = "^0.0.4"
 librosa = "^0.10.1"
+deepfilternet = "^0.5.6"
+torchaudio = "^2.1.2"
 
 
 [build-system]

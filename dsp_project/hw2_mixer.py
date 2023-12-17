@@ -19,7 +19,7 @@ root_dir_path = dsp_project_dir_path.parent
 sys.path.append(str(dsp_project_dir_path))
 sys.path.append(str(root_dir_path.joinpath("configs")))
 
-from configs.hw1.config import Params  # noqa: E402
+from configs.hw2.config import Params  # noqa: E402
 
 
 def mixer(original: List[float], noise: List[float], snr_db: int) -> List[float]:

@@ -202,16 +202,24 @@ def calculate_metrics(
     }
 
     def make_torch(x):
-        return torch.from_numpy(x)
+        if isinstance(x, np.ndarray):
+            x = torch.from_numpy(x)
+        if len(x.shape) > 1:
+            x = x[0]
+        return x
 
     torch_original = make_torch(original)
     torch_mix = make_torch(mix)
 
     torch_original_resampled = make_torch(
-        librosa.resample(original, orig_sr=sampling_rate, target_sr=pesq_sampling_rate)
+        librosa.resample(
+            np.array(original), orig_sr=sampling_rate, target_sr=pesq_sampling_rate
+        )
     )
     torch_mix_resampled = make_torch(
-        librosa.resample(mix, orig_sr=sampling_rate, target_sr=pesq_sampling_rate)
+        librosa.resample(
+            np.array(mix), orig_sr=sampling_rate, target_sr=pesq_sampling_rate
+        )
     )
 
     metrics = {}
