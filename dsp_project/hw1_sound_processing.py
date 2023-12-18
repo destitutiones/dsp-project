@@ -93,7 +93,7 @@ def process_sound(
 
     # Корректируем АЧХ колонки, умножая всю i-ую полосу на i-ый полученный гейн
     # Так как границы частот полос могут отличаться, не используем метод make_bands,
-    # а проходим по значениям white_noise_freq_domain и сопоставляем их полосам freq_bands
+    # а проходим по значениям white_noise_freq_domain и сопоставляем их полосам freq_bands   ## дикий кайф
     white_noise_fft_adjusted = white_noise_fft.copy()
     for i in range(band_cnt):
         idx = np.where(
@@ -128,6 +128,9 @@ def process_sound(
     # 10. Считаем деконволюцию от записанного шума и оригинального, получаем импульсный отклик
     white_noise_record, _ = sf.read(data_dir_path + noise_white_record_file_name)
     white_noise_deconv = deconvolve(white_noise_record, white_noise)
+
+    ## деконволв из сципи возвращает одно число (почему-то), поэтому собственно результат получился просто умноженный на константу
+    ## можно было юзануть в качестве деконволюции деление в частотной области (см коммент в самом низу первой домашки https://github.com/girafe-ai/dsp/blob/master/домашка/module1lecture2.md
 
     # Обработка тестового файла
     # Пути до данных

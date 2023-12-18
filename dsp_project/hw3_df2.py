@@ -73,6 +73,8 @@ def main(cfg: Params):
 
     print(metrics_df[["file", "SNR, dB", "SDR", "SI-SDR", "PESQ"]])
 
+    ## a DNSMOS?
+
 
 if __name__ == "__main__":
     main()

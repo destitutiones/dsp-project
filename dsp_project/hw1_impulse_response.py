@@ -42,6 +42,9 @@ def main(cfg: Params) -> None:
         orig.shape == reverb.shape
     ), "Original and recorded audio tracks should have equal shapes"
 
+    ## файлы должны быть не только обрезаны, а еще и выравнены по началу; это можно было сделать через кросс-корреляцию
+    ## или через добавление маркера в аудио (искусственно забиваешь единицами примерно 10мс в самом начале, и в записи обрезаешь по этому маркеру)
+
     plot_input_tracks(
         {"original": orig, "record": reverb},
         "Plotting input audio tracks amplitude graph",
