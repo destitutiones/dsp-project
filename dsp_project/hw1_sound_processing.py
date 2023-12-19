@@ -128,6 +128,7 @@ def process_sound(
     # 10. Считаем деконволюцию от записанного шума и оригинального, получаем импульсный отклик
     white_noise_record, _ = sf.read(data_dir_path + noise_white_record_file_name)
     white_noise_deconv = deconvolve(white_noise_record, white_noise)
+    # Здесь стоит в качестве деконволюции воспользоваться делением в частотной области
 
     # Обработка тестового файла
     # Пути до данных
